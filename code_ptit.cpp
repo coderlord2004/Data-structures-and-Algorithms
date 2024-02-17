@@ -1,32 +1,39 @@
-/*
-Cho mảng A[] gồm n phần tử. Hãy tìm số phép đổi chỗ ít nhất
-giữa các phần tử của mảng để mảng A[] được sắp xếp. Ví dụ với A[] = {4, 3, 2, 1}
-ta cần thực hiện ít nhất 2 phép đổi chỗ: Swap(A[0], A[3]),  Swap(A[1], A[2]).
-*/
+
 #include<bits/stdc++.h>
 using namespace std;
+#define ll long long
 
 int main(){
-    int t; cin >> t;
+    int t;
+    cin >> t;
     while(t--){
-        int n; cin >> n;
-        int a[n], b[n];
-        for(int i=0; i<n; i++){
-            cin >> a[i];
-            b[i] = a[i];
-        }
-        sort(a, a+n); // so sánh 2 mảng a đã sắp xếp với mảng b chưa sắp xếp và đếm số lần đổi chỗ ít nhất.
-        int cnt = 0;
-        for(int i=0; i<n; i++){
-            if(b[i] != a[i]){ //tìm thấy phần tử đã bị swap.
-                int min_pos = i; // tìm vị trí của phần tử nhỏ nhất và swap với phần tử hiện tại.
-                for(int j = i+1; j<n; j++){
-                    if(b[min_pos] > b[j]) min_pos = j;
-                }
-                swap(b[i], b[min_pos]);
-                ++cnt;
+        int n, m;
+        cin >> n >> m;
+        int a[n], b[m], Min = min(m, n);
+        for(int &x : a) cin >> x;
+        for(int &y : b) cin >> y;
+        sort(a, a+n); sort(b, b+m);
+        int hop[m+n], giao[Min];
+        int i=0, j = 0, hop_idx = 0, giao_idx = 0;
+        while(i < n && j < m){
+            if(a[i] == b[j]){
+                hop[hop_idx++] = a[i++];
+                giao[giao_idx++] = b[j++];
             }
-       }
-       cout << cnt << endl;
+            else if(a[i] < b[j]){
+                hop[hop_idx++] = a[i++];
+            }
+            else hop[hop_idx++] = b[j++];
+        }        
+        while(i<n){
+             hop[hop_idx++] = a[i++];
+        }        
+        while(j<m){
+            hop[hop_idx++] = b[j++];
+        } 
+        for(int i=0; i<hop_idx; i++) cout << hop[i] << " ";
+        cout << endl;
+        for(int i=0; i<giao_idx; i++) cout << giao[i] << " ";
+        cout << endl;
     }
 }
