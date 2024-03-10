@@ -1,51 +1,51 @@
+
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
-int first_pos(int a[], int l, int r, int x){
-    int res = -1;
-    while(l <= r){
-        int m = (l+r)/2;
-        if(a[m] == x){
-            res = m;
-            r = m-1;
-        }
-        else if(a[m] < x) l = m+1;
-        else r = m-1;
-    }
-    return res;
+int a[100], used[100], n;
+void in(){
+  for(int i=1; i<=n; i++) cout << (char)(a[i]+64);
+  cout << endl;
 }
-int last_pos(int a[], int l, int r, int x){
-    int res = -1;
-    while(l <= r){
-        int m = (l+r)/2;
-        if(a[m] == x){
-            res = m;
-            l = m+1;
+void check(){
+    if(n<5){
+        if((char)(a[1] + 64) == 'A' || (char)(a[n] + 64) == 'A'){
+          in();
         }
-        else if(a[m] < x) l = m+1;
-        else r = m-1;
     }
-    return res;
-}
-int main(){
-    int t; cin >> t;
-    while(t--){
-        int n, k; cin >> n >> k;
-        int a[n];
-        map<int, int> mp;
-        for(int &x : a) {
-            cin >> x;
-            mp[x]++;
-        }
-        sort(a, a+n);
-        ll cnt = 0;
-        for(int i=0; i<n; i++){
-            int key1 = last_pos(a, i+1, n-1, k-a[i]);
-            int key2 = first_pos(a, i+1, n-1, k-a[i]);
-            if(key1 != -1){
-                cnt += (key1 - key2 + 1); 
+     else {
+        char x1 = (char)(a[1] + 64), x2 = (char)(a[n] + 64);
+        if(x1 == 'A' && x2 == 'E') in();
+        else if(x1 == 'E' && x2 == 'A') in();
+        else {
+          for(int i=1; i<=n-1; i++){
+            if((char)(a[i] + 64) == 'A' && (char)(a[i+1] + 64) == 'E') {
+              in();
+              break;
             }
-        }        
-        cout << cnt << endl;
-   }
+            else if((char)(a[i] + 64) == 'E' && (char)(a[i+1] + 64) == 'A'){
+               in();
+               break;
+            }
+          }
+        }
+    }
+}
+void Try(int i){
+    for(int j=1; j<=n; j++){
+      if(used[j] == 0){
+        used[j] = 1;
+        a[i] = j;
+        if(i == n){
+           check();
+        }
+        else Try(i+1);
+        used[j] = 0;
+      }
+    }
+}
+int main(){ 
+    char c;
+    cin >> c;
+    n = (int)c - 64;  
+    Try(1);
 }
