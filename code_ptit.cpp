@@ -1,44 +1,51 @@
-/*
-Cho dãy số nguyên A[] độ dài N. Xác định số lượng chỉ số M (M < N) thỏa mãn: nếu sắp xếp đoạn con (A1,…,AM) và (AM+1, …, AN) theo thứ tự tăng dần thì được dãy số A tăng dần.
 
-Input
-
-Dòng đầu tiên ghi số bộ test T
-Mỗi bộ test bắt đầu bằng một dòng chứa số N (2 ≤ N ≤ 105)
-Dòng tiếp theo ghi N số của dãy A (|Ai| ≤ 109)
-Output
-
-Với mỗi bộ test:
-
-Dòng đầu tiên ghi số K là số lượng vị trí M tìm được
-Dòng thứ 2 ghi ra K số theo thứ tự tăng dần lần lượt là các chỉ số thỏa mãn. Nếu K = 0 thì dòng này bỏ trống. 
-*/
-//Ý tưởng: duyệt lần lượt các phần tử của mảng, với mỗi phần tử có chỉ số i đang xét tìm MAX của mảng bên trái từ j=0 -> j=i và MIN của j=i+1 -> j=n-1 bằng cách sử dụng multiset.
 #include<bits/stdc++.h>
 using namespace std;
-
-int main(){ 
-    int t; cin >> t;
-    while(t--){
-      int n; cin >> n;
-      int a[n];
-      multiset<int> l, r;
-      for(int i=0; i<n; i++) {
-        cin >> a[i];
-        if(i>=1) r.insert(a[i]);
-      }
-      int cnt_pos = 0;
-      vector<int> v;
-      for(int i=0; i<n-1; i++){
-        l.insert(a[i]);
-        if(*(l.rbegin()) <= *(r.begin())){
-          ++cnt_pos;
-          v.push_back(i+1);
+int a[100], used[100], n;
+void in(){
+  for(int i=1; i<=n; i++) cout << (char)(a[i]+64);
+  cout << endl;
+}
+void check(){
+    if(n<5){
+        if((char)(a[1] + 64) == 'A' || (char)(a[n] + 64) == 'A'){
+          in();
         }
-        r.erase(r.find(a[i+1]));
-      }
-      cout << cnt_pos << endl;
-      for(int i=0; i<v.size(); i++) cout << v[i] << " ";
-      cout << endl;
     }
+     else {
+        char x1 = (char)(a[1] + 64), x2 = (char)(a[n] + 64);
+        if(x1 == 'A' && x2 == 'E') in();
+        else if(x1 == 'E' && x2 == 'A') in();
+        else {
+          for(int i=1; i<=n-1; i++){
+            if((char)(a[i] + 64) == 'A' && (char)(a[i+1] + 64) == 'E') {
+              in();
+              break;
+            }
+            else if((char)(a[i] + 64) == 'E' && (char)(a[i+1] + 64) == 'A'){
+               in();
+               break;
+            }
+          }
+        }
+    }
+}
+void Try(int i){
+    for(int j=1; j<=n; j++){
+      if(used[j] == 0){
+        used[j] = 1;
+        a[i] = j;
+        if(i == n){
+           check();
+        }
+        else Try(i+1);
+        used[j] = 0;
+      }
+    }
+}
+int main(){ 
+    char c;
+    cin >> c;
+    n = (int)c - 64;  
+    Try(1);
 }
